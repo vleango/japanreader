@@ -1,0 +1,36 @@
+# rails 6.0.0 full rails app
+# rails new groundzero -d=postgresql --skip-bundle --skip-git --skip-action-mailer --skip-action-mailbox --skip-action-text --skip-action-cable --skip-turbolinks --skip-test --skip-system-test --skip-javascript
+# rails new groundzero -d=mysql --skip-bundle --skip-git --skip-action-mailer --skip-action-mailbox --skip-action-text --skip-action-cable --skip-turbolinks --skip-test --skip-system-test --skip-javascript
+
+FROM ruby:3.0.0
+RUN apt-get update -qq && apt-get install -y build-essential vim sudo
+
+# Nodejs
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
+    apt-get install -y nodejs
+
+# Yarn
+RUN npm install -g yarn
+
+# Rails
+RUN gem install rails --no-document
+
+# required to be passed in
+ARG APP_PATH
+
+ARG INSTALL_PATH=/app
+ARG LOCAL_USER=rails
+
+# Create a directory where our app will be placed
+RUN mkdir -p $INSTALL_PATH
+
+# Change directory so that our commands run inside this new directory
+WORKDIR $INSTALL_PATH
+
+# Create local user
+RUN useradd -m $LOCAL_USER && echo "${LOCAL_USER}:${LOCAL_USER}" | chpasswd && adduser $LOCAL_USER sudo
+USER $LOCAL_USER
+
+COPY . $INSTALL_PATH
+
+CMD ["rails", "server"]
