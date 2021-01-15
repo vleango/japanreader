@@ -59,16 +59,25 @@ services:
       MYSQL_ROOT_PASSWORD: rails
       MYSQL_USERNAME: rails
       MYSQL_PASSWORD: rails
+  # db-admin:
+  #   image: dpage/pgadmin4
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: "user@email.com"
+  #     PGADMIN_DEFAULT_PASSWORD: "hogehoge"
+  #   ports:
+  #     - 4000:80
+  #   logging:
+  #     driver: "none"
+  #   depends_on:
+  #     - db-postgres
   db-admin:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "user@email.com"
-      PGADMIN_DEFAULT_PASSWORD: "hogehoge"
+    image: adminer
+    restart: always
     ports:
-      - 4000:80
+      - 3005:8080
     logging:
       driver: "none"
     depends_on:
-      - db-postgres
+      - db-mysql
 volumes:
   db_data:

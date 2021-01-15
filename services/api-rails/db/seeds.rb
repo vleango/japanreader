@@ -1,7 +1,15 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+Dir.glob("#{Rails.root}/db/seeds/jdict/*.sql").each do |file|
+
+  puts "Seeding #{file} > db (#{Rails.env})"
+  puts '*' * 50
+
+  connection = ActiveRecord::Base.connection
+  sql = File.read(file)
+  statements = sql.split(/;$/)
+  statements.pop
+
+  ActiveRecord::Base.transaction do
+    statements.each{|statement| connection.execute(statement) }
+  end
+
+end
