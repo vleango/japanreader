@@ -6,11 +6,8 @@ FROM ruby:3.0.0
 RUN apt-get update -qq && apt-get install -y build-essential vim sudo
 
 # Nodejs
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
-    apt-get install -y nodejs
-
-# Yarn
-RUN npm install -g yarn
+#RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
+#    apt-get install -y nodejs
 
 # Rails
 RUN gem install rails --no-document
@@ -31,6 +28,6 @@ WORKDIR $INSTALL_PATH
 RUN useradd -m $LOCAL_USER && echo "${LOCAL_USER}:${LOCAL_USER}" | chpasswd && adduser $LOCAL_USER sudo
 USER $LOCAL_USER
 
-COPY . $INSTALL_PATH
+#COPY . $INSTALL_PATH
 
 CMD ["rails", "server"]

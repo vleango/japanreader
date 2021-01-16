@@ -1,34 +1,34 @@
 version: "3.4"
 
 services:
-  web-react:
-    build:
-      context: .
-      dockerfile: ./config/dockerfiles/Dockerfile-node
-      args:
-        APP_PATH: ./services/web-react
-    ports:
-      - '3000:3000'
-    volumes:
-      - ./services/web-react:/app
-    command:
-      - ./docker-compose-start.sh
-    depends_on:
-      - api-rails
-    stdin_open: true
-    tty: true
-  api-rails:
+  # web-react:
+  #   build:
+  #     context: .
+  #     dockerfile: ./config/dockerfiles/Dockerfile-node
+  #     args:
+  #       APP_PATH: ./services/web-react
+  #   ports:
+  #     - '3000:3000'
+  #   volumes:
+  #     - ./services/web-react:/app
+  #   command:
+  #     - ./docker-compose-start.sh
+  #   depends_on:
+  #     - api-rails
+  #   stdin_open: true
+  #   tty: true
+  api-dictionary:
     build:
       context: .
       dockerfile: ./config/dockerfiles/Dockerfile-ruby
       args:
-        APP_PATH: ./services/api-rails
+        APP_PATH: ./services/api-dictionary
     ports:
       - '3001:3000'
     env_file:
       - ./config/environments/.development.env
     volumes:
-      - ./services/api-rails:/app
+      - ./services/api-dictionary:/app
     depends_on:
       - db-mysql
     command:
@@ -37,16 +37,6 @@ services:
     tty: true
   #   to run with byebug:
   #   docker-compose up -d && docker attach groundzero_api-rails_1
-  db-postgres:
-    image: postgres:12
-    restart: always
-    volumes:
-      - db_data:/var/lib/postgresql/data
-    logging:
-      driver: "none"
-    environment:
-      - POSTGRES_USER=rails
-      - POSTGRES_PASSWORD=rails
   db-mysql:
     image: mysql:8.0
     command: --default-authentication-plugin=mysql_native_password
@@ -59,17 +49,6 @@ services:
       MYSQL_ROOT_PASSWORD: rails
       MYSQL_USERNAME: rails
       MYSQL_PASSWORD: rails
-  # db-admin:
-  #   image: dpage/pgadmin4
-  #   environment:
-  #     PGADMIN_DEFAULT_EMAIL: "user@email.com"
-  #     PGADMIN_DEFAULT_PASSWORD: "hogehoge"
-  #   ports:
-  #     - 4000:80
-  #   logging:
-  #     driver: "none"
-  #   depends_on:
-  #     - db-postgres
   db-admin:
     image: adminer
     restart: always
