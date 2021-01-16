@@ -37,6 +37,26 @@ services:
     tty: true
   #   to run with byebug:
   #   docker-compose up -d && docker attach groundzero_api-rails_1
+  api-kanji:
+    build:
+      context: .
+      dockerfile: ./config/dockerfiles/Dockerfile-ruby
+      args:
+        APP_PATH: ./services/api-kanji
+    ports:
+      - '3002:3000'
+    env_file:
+      - ./config/environments/.development.env
+    volumes:
+      - ./services/api-kanji:/app
+    depends_on:
+      - db-mysql
+    command:
+      - ./docker-compose-start.sh
+    stdin_open: true
+    tty: true
+  #   to run with byebug:
+  #   docker-compose up -d && docker attach groundzero_api-rails_1
   db-mysql:
     image: mysql:8.0
     command: --default-authentication-plugin=mysql_native_password
